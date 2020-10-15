@@ -3,7 +3,7 @@
 
 Подключение на примере NodeMCU v3 (i2c)
 
-DS18B20
+
 <table align="left" border="1" cellpadding="1" cellspacing="1" style="width:500px">
 	<tbody>
 		<tr>
@@ -22,12 +22,10 @@ DS18B20
 			<td>DAT</td>
 			<td>D5 pin</td>
 		</tr>
-	</tbody>
-</table>
-
-
-<table border="1" cellpadding="1" cellspacing="1" style="width:500px">
-	<tbody>
+		<tr>
+			<td></td>
+			<td></td>
+		</tr>
 		<tr>
 			<td>BME280</td>
 			<td>NodeMCU</td>
