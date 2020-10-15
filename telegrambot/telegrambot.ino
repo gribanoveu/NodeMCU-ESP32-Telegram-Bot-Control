@@ -14,7 +14,7 @@
 #include <ElegantOTA.h>       
 #include <WiFiClientSecure.h> 
 #include <UniversalTelegramBot.h> 
-#include <ArduinoJson.h>
+#include <ArduinoJson.h> // необходима 5 версия библиотеки
 #include <Adafruit_BME280.h>
 #include <Adafruit_Sensor.h>
 #include <DallasTemperature.h>
