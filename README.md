@@ -7,7 +7,7 @@ DS18B20
 <table align="left" border="1" cellpadding="1" cellspacing="1" style="width:500px">
 	<tbody>
 		<tr>
-			<td>Sensor</td>
+			<td>DS18B20</td>
 			<td>NodeMCU</td>
 		</tr>
 		<tr>
@@ -25,11 +25,11 @@ DS18B20
 	</tbody>
 </table>
 
-BME280
+
 <table border="1" cellpadding="1" cellspacing="1" style="width:500px">
 	<tbody>
 		<tr>
-			<td>Sensor</td>
+			<td>BME280</td>
 			<td>NodeMCU</td>
 		</tr>
 		<tr>
