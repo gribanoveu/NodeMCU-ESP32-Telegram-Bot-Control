@@ -1,16 +1,9 @@
-//----------------------------
-// определить тип устройства
-//----------------------------
 #ifdef ESP32
   #include <WiFi.h>
   #include <WebServer.h>
 #else
   #include <ESP8266WiFi.h>
 #endif
-
-//-----------------------------
-// библиотеки
-//-----------------------------
 #include <ElegantOTA.h>       
 #include <WiFiClientSecure.h> 
 #include <UniversalTelegramBot.h> 
@@ -20,57 +13,47 @@
 #include <DallasTemperature.h>
 #include <OneWire.h>
 
-// ----------------------------
-// подключение датчиков
-//-----------------------------
-// --выносной датчик температуры DS18B20:
-#define ONE_WIRE_BUS 14 //D5 pin of nodemcu
+#define ONE_WIRE_BUS 14 // DS18B20 D5 pin of nodemcu
+
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature tempSensors(&oneWire);
-uint8_t sensor1[8] = {0x28, 0x17, 0xBC, 0xBC, 0x33, 0x20, 0x01, 0x88}; // адреса датчика DS18B2
-// --внутрикомнатный датчик Температуры, Влажности, Давления:
-Adafruit_BME280 bme; // подключение BME280
+uint8_t sensor_DS18B2[8] = {0x28, 0x17, 0xBC, 0xBC, 0x33, 0x20, 0x01, 0x88};
+Adafruit_BME280 bme; 
 
-//----------------------------
-// подключение к сети
-//----------------------------
 const char *ssid = "ИМЯ ТВОЕГО WiFi";
 const char *password = "ПАРОЛЬ ТВОЕГО WiFi";
 
-// сервер для обновлений по воздуху
 #ifdef ESP32
-  WebServer server(80); // (только для ESP32)
+  WebServer server(80);
 #else
-  ESP8266WebServer server(80); // (только для ESP8266)
+  ESP8266WebServer server(80);
 #endif
 
-//----------------------------
-// подключение телеграмм бота
-//----------------------------
-// Список разрешенных пользователей:
-#define CHAT_ID_1 "XXXXXXXXX" // ТВОЙ id в Телеграм
-// #define CHAT_ID_X "XXXXXXXXX" - каждый новый id в новой строке
+// Список разрешенных пользователей, каждый новый id в новой строке:
+define CHAT_ID_1 "XXXXXXXXX"
 
-#define BOTtoken "XXXXXX:XXXXXXXXX" // Токен, полученный от BotFather
-WiFiClientSecure client; // подключение к сети
+// Токен, полученный от BotFather
+define BOTtoken "XXXXXX:XXXXXXXXX" 
+// подключение к сети
+WiFiClientSecure client; 
 UniversalTelegramBot bot(BOTtoken, client);
-int botRequestDelay = 1000; // проверка сообщений раз в секунду
+// проверка сообщений раз в секунду
+int botRequestDelay = 1000; 
 unsigned long lastTimeBotRun;
+// массив разрешенных id 
 String allowed_id[] = {CHAT_ID_1};
-// String allowed_id[] = {CHAT_ID_1, CHAT_ID_X, ...etc}; - массив разрешенных id 
+
 
 void setup()
 {
-  Serial.begin(115200); // открытие порта на 115200 бод
-  
+  Serial.begin(115200);
   #ifdef ESP8266
     client.setInsecure();
   #endif
-  
-  checkBme(); // инициализации датчика BME280
-  tempSensors.begin(); // инициализация датчиков температуры DS18B20
-  connectWiFi(); // подключение к Wi-Fi
-  startOTA(); // старт сервера для обновления OTA
+  checkBme(); 
+  tempSensors.begin(); 
+  connectWiFi();
+  startOTA();
   
 }
 
@@ -133,7 +116,8 @@ String getReadingsBME280(){
 
   temperature = bme.readTemperature();
   humidity = bme.readHumidity();
-  preassure = bme.readPressure() / 133.32F; // перевод давления в мм. рт. с.
+  // перевод давления в мм. рт. с.
+  preassure = bme.readPressure() / 133.32F;
 
   // формирование стороки
   String message = "Температура: " + String(temperature) + " ºC \n";
@@ -148,17 +132,15 @@ String getTempOutside()
 {
   int temp;
 
-  tempSensors.requestTemperatures();      // запрос информации
-  temp = tempSensors.getTempC(sensor1); // сохранение показаний 
+  tempSensors.requestTemperatures();
+  temp = tempSensors.getTempC(sensor_DS18B2);
 
-  // формирование стороки
   String message = "Температура на улице: " + String(temp) + " ºC \n";
   return message;
 }
 
 // что произойдет если получено сообщение
 void handleNewMessages(int numNewMessages) {
-  // отображение в консоли
   Serial.println("handleNewMessages");
   Serial.println(String(numNewMessages));
 
